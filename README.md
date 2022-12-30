@@ -17,9 +17,7 @@ cd vue3-demo
 
 ```
 
-
-
-3.配置vite.config.js(@/开头路径)
+3.配置 vite.config.js(@/开头路径)
 
 ```js
 import path from 'path'
@@ -34,8 +32,6 @@ export default defineConfig({
 })
 ```
 
-
-
 4.添加路由
 
 ```shell
@@ -43,46 +39,44 @@ export default defineConfig({
 yarn add vue-router@next
 ```
 
-4.1路由配置
+4.1 路由配置
 
-新建文件src/router/index.js
+新建文件 src/router/index.js
 
 ```js
 // src/router/index.js
-import {createRouter, createWebHistory} from "vue-router";
+import { createRouter, createWebHistory } from 'vue-router';
 
 // 懒加载
-const Hello = () => import('@/components/HelloWorld.vue')
+const Hello = () => import('@/components/HelloWorld.vue');
 
 const routes = [
-    {
-        path: '/',
-        component: Hello
-    },
-]
+	{
+		path: '/',
+		component: Hello,
+	},
+];
 
 const router = createRouter({
-    history: createWebHistory(),
-    routes
-})
+	history: createWebHistory(),
+	routes,
+});
 
-export default router
+export default router;
 ```
 
-4.2挂载路由
+4.2 挂载路由
 
 ```js
 // main.js
 // 路由
-import router from '@/router'
+import router from '@/router';
 
-const app = createApp(App)
-app.use(router)
+const app = createApp(App);
+app.use(router);
 ```
 
-
-
-5.引入Element-plus组件库
+5.引入 Element-plus 组件库
 
 ```shell
 #5.1使用包管理器
@@ -91,7 +85,7 @@ yarn add element-plus
 yarn add -D unplugin-vue-components unplugin-auto-import
 ```
 
-5.3配置vite.config.js
+5.3 配置 vite.config.js
 
 ```shell
 import {defineConfig} from 'vite'
@@ -113,19 +107,41 @@ export default defineConfig({
             resolvers: [ElementPlusResolver()],
         }),
     ],
-})
+})`
 ```
 
-6.引入WindCSS
+6.引入 WindCSS
 
 ```shell
 yarn add -D vite-plugin-windicss windicss
 ```
 
-6.1配置main.js
+6.1 配置 main.js
 
 ```js
 // windiCSS
-import 'virtual:windi.css'
+import 'virtual:windi.css';
 ```
 
+7.引入 less
+```shell
+yarn add less-loader less -D
+```
+
+7.1 创建路径
+src/assets/style/global.less
+
+7.2 配置 vite.config.js
+```js
+css: {
+    // css预处理器
+    preprocessorOptions: {
+        less: {
+            modifyVars: {
+                hack: `true; @import (reference) "${path.resolve("src/assets/style/global.less")}";`
+            },
+            javascriptEnabled: true
+        }
+    }
+}
+```

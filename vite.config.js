@@ -8,8 +8,7 @@ import Components from 'unplugin-vue-components/vite'
 import {ElementPlusResolver} from 'unplugin-vue-components/resolvers'
 
 // WindiCSS
-import WindiCSS from 'vite-plugin-windicss'
-
+// import WindiCSS from 'vite-plugin-windicss'
 // vite配置
 import path from 'path'
 
@@ -21,7 +20,6 @@ export default defineConfig({
     },
     plugins: [
         vue(),
-        WindiCSS(),
         AutoImport({
             resolvers: [ElementPlusResolver()],
         }),
@@ -29,4 +27,15 @@ export default defineConfig({
             resolvers: [ElementPlusResolver()],
         }),
     ],
+    css: {
+        // css预处理器
+        preprocessorOptions: {
+            less: {
+                modifyVars: {
+                    hack: `true; @import (reference) "${path.resolve("src/assets/style/global.less")}";`
+                },
+                javascriptEnabled: true,
+            },
+        },
+    },
 })

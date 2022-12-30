@@ -1,9 +1,9 @@
 import {createApp} from 'vue'
-import './style.css'
 import App from '@/App.vue'
 
 // windiCSS
-import 'virtual:windi.css'
+// import 'virtual:windi.css'
+
 // 路由
 import router from '@/router'
 
