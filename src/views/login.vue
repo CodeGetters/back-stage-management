@@ -1,23 +1,25 @@
 <template>
-  <el-row :gutter="20" class="container">
+  <el-row :gutter="20" class="container" style="margin:0" >
 
-    <el-col :span="18" class="left">
+    <el-col :lg="18" :md="12" class="left">
       <div class="welText">
         <h1>欢迎光临</h1>
         <span>Vite + Vue + Element-plus + Vue-Router + Less</span>
       </div>
     </el-col>
 
-    <el-col :span="6" class="right">
+    <el-col :lg="6" :md="12" class="right">
       <h2>欢迎回来</h2>
-      <span>账号密码登录</span>
+      <div class="text-indent">
+        <span class="text-inline"></span>
+        <span>账号密码登录</span>
+        <span class="text-inline"></span>
+      </div>
       <el-form
           ref="ruleFormRef"
           :model="ruleForm"
           status-icon
           :rules="rules"
-          label-width="120px"
-          class="demo-ruleForm"
       >
         <el-form-item prop="uname">
           <el-input v-model="ruleForm.uname" autocomplete="off" placeholder="请输入账号"/>
@@ -118,6 +120,10 @@ const submitForm = (formEl: FormInstance | undefined) => {
       font-size: 3em;
       margin-bottom: 10px;
     }
+
+    span {
+      color: #d9d3d3;
+    }
   }
 
   .right {
@@ -126,7 +132,37 @@ const submitForm = (formEl: FormInstance | undefined) => {
     align-items: center;
     flex-direction: column;
 
+    h2 {
+      font-size: 2em;
+      color: #989494;
+    }
 
+    .text-indent {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 15px 0;
+      color: #d1d5db;
+
+      span {
+        margin: 0 5px;
+      }
+
+      .text-inline {
+        height: 1px;
+        width: 64px;
+        background-color: #e5e7eb;
+      }
+    }
+
+    .el-form {
+
+      .el-button{
+        width: 250px;
+        border-radius: 25px;
+        background-color: #0ea5e9;
+      }
+    }
   }
 }
 </style>
