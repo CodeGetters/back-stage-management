@@ -323,9 +323,35 @@ export function login(username, password) {
 }
 ```
 
-使用VueUse工具集-useCookies
-
+4.3使用VueUse工具集-useCookies
+这两个主要用于设置、读取、删除Cookie信息
 ```shell
 yarn add @vueuse/integrations
 yarn add universal-cookie
 ```
+
+使用示例
+```vue
+<template>
+  <div>后台首页</div>
+  <el-button @click="setCookie">设置</el-button>
+  <el-button @click="deleteCookie">删除</el-button>
+  <el-button @click="getCookie">读取</el-button>
+</template>
+<script setup>
+import {useCookies} from '@vueuse/integrations/useCookies'
+const cookie = useCookies()
+console.log(cookie)
+function setCookie() {
+  cookie.set('admin-token', "123456")
+}
+function getCookie() {
+  console.log(cookie.get('admin-token'))
+}
+function deleteCookie() {
+  cookie.remove('admin-token')
+}
+</script>
+```
+
+4.4

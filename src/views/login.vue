@@ -47,8 +47,11 @@
             </template>
           </el-input>
         </el-form-item>
+        <!--提示框-->
+        <el-alert v-model="isShow" v-show="isShow" title="用户名或密码错误" type="error" show-icon/>
+
         <el-form-item>
-          <el-button type="primary" @click="submitForm"
+          <el-button :loading="loading" type="primary" @click="submitForm"
           >登录
           </el-button
           >
@@ -62,15 +65,20 @@
 <script lang="ts" setup>
 
 import {reactive, ref} from 'vue'
+// router
 import {useRouter} from "vue-router";
-import type {ElNotification, FormInstance, FormRules} from 'element-plus'
-import {login} from '../api/manager.js'
+// Element-plus
+import type {FormInstance, FormRules} from 'element-plus'
+// 登录
+import {getInfo, login} from '../api/manager.js'
+// cookie
 import {useCookies} from '@vueuse/integrations/useCookies'
 
 const cookie = useCookies()
 const router = useRouter()
 const ruleFormRef = ref<FormInstance>(null)
-
+const isShow = ref(false)
+const loading = ref(false)
 
 const ruleForm = reactive({
   username: '',
@@ -112,34 +120,31 @@ const rules = reactive<FormRules>({
     }
   ]
 })
+
 const submitForm = () => {
   ruleFormRef.value.validate((isValid) => {
     if (!isValid) {
       return false
     }
+    loading.value = true
     login(ruleForm.username, ruleForm.password)
         .then(res => {
-          // console.log(res.data)
-          console.log(res.data.data)
-          // 提示弹出框
-          ElNotification({
-            message: "登录成功",
-            type: 'success',
-            duration: 3000
+
+          // 存储token
+          cookie.set('admin-token', res.token)
+
+          // 获取用户相关信息
+          getInfo().then(res2 => {
+            console.log(res2)
           })
-          // 存储token和用户相关信息
-          cookie.set('admin-token', res.data.data.token)
+
           // 跳转到后台首页
           router.push('/home')
         }, error => {
-          // console.log('请求失败', error.response.data)
-          // 提示弹出框
-          ElNotification({
-            message: error.response.data.msg || '请求失败',
-            type: 'error',
-            duration: 3000
-          })
-        })
+          isShow.value = true
+        }).finally(() => {
+      loading.value = false
+    })
   })
 }
 </script>
@@ -195,6 +200,11 @@ const submitForm = () => {
         width: 64px;
         background-color: #e5e7eb;
       }
+    }
+
+    .el-alert {
+      margin-bottom: 15px;
+      transition: all 0.3s;
     }
 
     .el-form {

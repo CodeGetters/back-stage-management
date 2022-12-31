@@ -6,3 +6,7 @@ export function login(username, password) {
         password
     })
 }
+
+export function getInfo() {
+    return service.post('/getinfo')
+}
