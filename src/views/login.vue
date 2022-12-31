@@ -62,7 +62,7 @@
 </template>
 
 <script lang="ts" setup>
-import {reactive, ref} from 'vue';
+import {onBeforeUnmount, onMounted, reactive, ref} from 'vue';
 // router
 import {useRouter} from 'vue-router';
 // Element-plus
@@ -70,9 +70,7 @@ import type {FormInstance, FormRules} from 'element-plus';
 import {toast} from '../composables/util.js';
 // vuex
 import {useStore} from "vuex";
-// 登录
-import {getInfo, login} from '../api/manager.js';
-import {setToken} from '../composables/auth.js';
+
 
 const store = useStore()
 const router = useRouter();
@@ -127,33 +125,28 @@ const submitForm = () => {
       return false;
     }
     loading.value = true;
-    login(ruleForm.username, ruleForm.password)
-        .then(
-            (res) => {
-              // TODO:跳转时element-plus没有样式
-              toast("登录成功!!!");
-
-              // 存储token
-              setToken(res.token);
-
-              // 获取用户相关信息
-              getInfo().then((res2) => {
-                store.commit("SET_USERINFO", res2)
-                console.log(res2);
-              });
-
-              // 跳转到后台首页
-              router.push('/home');
-            },
-            (error) => {
-              isShow.value = true;
-            }
-        )
-        .finally(() => {
-          loading.value = false;
-        });
+    store.dispatch("login", ruleForm).then(res => {
+      toast("登录成功")
+      router.push('/home')
+    }).finally(() => {
+      loading.value = false
+    })
   });
 };
+
+// 监听回车事件
+function onKeyUp(e) {
+  if (e.key == 'Enter') submitForm()
+}
+
+// 添加键盘事件
+onMounted(() => {
+  document.addEventListener('keyup', onKeyUp)
+})
+// 移除键盘监听
+onBeforeUnmount(() => {
+  document.addEventListener('keyup', onkeyup)
+})
 </script>
 
 <style lang="less" scoped>

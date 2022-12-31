@@ -1,6 +1,7 @@
 import {createRouter, createWebHistory} from "vue-router";
 import {getToken} from "@/composables/auth.js";
 import {toast} from "@/composables/util.js";
+import store from "@/store/index.js";
 
 // 懒加载
 const Hello = () => import('@/components/HelloWorld.vue')
@@ -33,7 +34,7 @@ const router = createRouter({
     routes
 })
 // 全局前置守卫
-router.beforeEach((to, from, next) => {
+router.beforeEach(async (to, from, next) => {
     const token = getToken()
     // 没有登录强制跳转登录页
     if (!token && to.path != '/login') {
@@ -46,6 +47,11 @@ router.beforeEach((to, from, next) => {
         // 回到上一页或者首页
         return next({path: from.path ? from.path : '/home'})
     }
+    // 如果用户登录，自动获取存储信息到vuex
+    if (token) {
+        await store.dispatch('getInfo')
+    }
+
     next()
 })
 
