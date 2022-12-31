@@ -1,6 +1,5 @@
 <template>
-  <el-row :gutter="20" class="login-container" style="margin:0">
-
+  <el-row :gutter="20" class="login-container" style="margin: 0">
     <el-col :lg="18" :md="12" class="left">
       <div class="welText">
         <h1>欢迎光临</h1>
@@ -15,12 +14,7 @@
         <span>账号密码登录</span>
         <span class="text-inline"></span>
       </div>
-      <el-form
-          ref="ruleFormRef"
-          :model="ruleForm"
-          status-icon
-          :rules="rules"
-      >
+      <el-form ref="ruleFormRef" :model="ruleForm" status-icon :rules="rules">
         <el-form-item prop="username">
           <el-input v-model="ruleForm.username" placeholder="请输入用户名">
             <!--自动导入-->
@@ -48,13 +42,18 @@
           </el-input>
         </el-form-item>
         <!--提示框-->
-        <el-alert v-model="isShow" v-show="isShow" title="用户名或密码错误" type="error" show-icon/>
+        <el-alert
+            v-model="isShow"
+            v-show="isShow"
+            title="用户名或密码错误"
+            type="error"
+            show-icon
+        />
 
         <el-form-item>
           <el-button :loading="loading" type="primary" @click="submitForm"
           >登录
-          </el-button
-          >
+          </el-button>
           <!--<el-button @click="resetForm">注册</el-button>-->
         </el-form-item>
       </el-form>
@@ -63,27 +62,28 @@
 </template>
 
 <script lang="ts" setup>
-
-import {reactive, ref} from 'vue'
+import {reactive, ref} from 'vue';
 // router
-import {useRouter} from "vue-router";
+import {useRouter} from 'vue-router';
 // Element-plus
-import type {FormInstance, FormRules} from 'element-plus'
+import type {FormInstance, FormRules} from 'element-plus';
+import {toast} from '../composables/util.js';
+// vuex
+import {useStore} from "vuex";
 // 登录
-import {getInfo, login} from '../api/manager.js'
-// cookie
-import {useCookies} from '@vueuse/integrations/useCookies'
+import {getInfo, login} from '../api/manager.js';
+import {setToken} from '../composables/auth.js';
 
-const cookie = useCookies()
-const router = useRouter()
-const ruleFormRef = ref<FormInstance>(null)
-const isShow = ref(false)
-const loading = ref(false)
+const store = useStore()
+const router = useRouter();
+const ruleFormRef = ref<FormInstance>(null);
+const isShow = ref(false);
+const loading = ref(false);
 
 const ruleForm = reactive({
   username: '',
-  password: ''
-})
+  password: '',
+});
 
 // 验证规则
 const rules = reactive<FormRules>({
@@ -94,14 +94,14 @@ const rules = reactive<FormRules>({
       required: true,
       message: '账号不能为空',
       // 失去焦点时触发
-      trigger: 'blur'
+      trigger: 'blur',
     },
     {
       min: 3,
       max: 15,
       message: '用户名长度必须在 3-15 之间',
-      trigger: 'blur'
-    }
+      trigger: 'blur',
+    },
   ],
   // 密码
   password: [
@@ -110,43 +110,50 @@ const rules = reactive<FormRules>({
       required: true,
       message: '密码不能为空',
       // 失去焦点时触发
-      trigger: 'blur'
+      trigger: 'blur',
     },
     {
       min: 5,
       max: 10,
       message: '密码长度必须在 5-10 之间',
-      trigger: 'blur'
-    }
-  ]
-})
+      trigger: 'blur',
+    },
+  ],
+});
 
 const submitForm = () => {
   ruleFormRef.value.validate((isValid) => {
     if (!isValid) {
-      return false
+      return false;
     }
-    loading.value = true
+    loading.value = true;
     login(ruleForm.username, ruleForm.password)
-        .then(res => {
+        .then(
+            (res) => {
+              // TODO:跳转时element-plus没有样式
+              toast("登录成功!!!");
 
-          // 存储token
-          cookie.set('admin-token', res.token)
+              // 存储token
+              setToken(res.token);
 
-          // 获取用户相关信息
-          getInfo().then(res2 => {
-            console.log(res2)
-          })
+              // 获取用户相关信息
+              getInfo().then((res2) => {
+                store.commit("SET_USERINFO", res2)
+                console.log(res2);
+              });
 
-          // 跳转到后台首页
-          router.push('/home')
-        }, error => {
-          isShow.value = true
-        }).finally(() => {
-      loading.value = false
-    })
-  })
-}
+              // 跳转到后台首页
+              router.push('/home');
+            },
+            (error) => {
+              isShow.value = true;
+            }
+        )
+        .finally(() => {
+          loading.value = false;
+        });
+  });
+};
 </script>
 
 <style lang="less" scoped>
@@ -208,7 +215,6 @@ const submitForm = () => {
     }
 
     .el-form {
-
       .el-button {
         width: 250px;
         border-radius: 25px;

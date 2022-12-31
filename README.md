@@ -354,4 +354,7 @@ function deleteCookie() {
 </script>
 ```
 
-4.4
+4.4存储token
+
+4.5用户信息持久化(vuex)
+
