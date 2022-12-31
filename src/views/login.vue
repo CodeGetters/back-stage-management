@@ -62,9 +62,15 @@
 <script lang="ts" setup>
 
 import {reactive, ref} from 'vue'
-import type {FormInstance, FormRules} from 'element-plus'
+import {useRouter} from "vue-router";
+import type {ElNotification, FormInstance, FormRules} from 'element-plus'
+import {login} from '../api/manager.js'
+import {useCookies} from '@vueuse/integrations/useCookies'
 
+const cookie = useCookies()
+const router = useRouter()
 const ruleFormRef = ref<FormInstance>(null)
+
 
 const ruleForm = reactive({
   username: '',
@@ -99,16 +105,41 @@ const rules = reactive<FormRules>({
       trigger: 'blur'
     },
     {
-      min: 6,
+      min: 5,
       max: 10,
-      message: '密码长度必须在 3-10 之间',
+      message: '密码长度必须在 5-10 之间',
       trigger: 'blur'
     }
   ]
 })
 const submitForm = () => {
   ruleFormRef.value.validate((isValid) => {
-    console.log(isValid)
+    if (!isValid) {
+      return false
+    }
+    login(ruleForm.username, ruleForm.password)
+        .then(res => {
+          // console.log(res.data)
+          console.log(res.data.data)
+          // 提示弹出框
+          ElNotification({
+            message: "登录成功",
+            type: 'success',
+            duration: 3000
+          })
+          // 存储token和用户相关信息
+          cookie.set('admin-token', res.data.data.token)
+          // 跳转到后台首页
+          router.push('/home')
+        }, error => {
+          // console.log('请求失败', error.response.data)
+          // 提示弹出框
+          ElNotification({
+            message: error.response.data.msg || '请求失败',
+            type: 'error',
+            duration: 3000
+          })
+        })
   })
 }
 </script>

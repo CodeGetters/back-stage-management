@@ -67,4 +67,15 @@ export default defineConfig({
             },
         },
     },
+    server:{
+        proxy:{
+            // 带选项写法：http://localhost:5173/api/bar -> http://jsonplaceholder.typicode.com/bar
+            '/api': {
+                // target: 'https://mock.presstime.cn/mock/63afb2b10a20cd00b24818ae/vvht',
+                target:'http://ceshi13.dishait.cn/admin',
+                changeOrigin: true,
+                rewrite: (path) => path.replace(/^\/api/, ''),
+            },
+        }
+    }
 })

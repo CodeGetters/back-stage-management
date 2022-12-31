@@ -157,11 +157,11 @@ css: {
 
 使用 element-plus 中的 layout 布局方式
 
-1.布局
+### 1.布局
 通过基础的 24 分栏平均的分成了4栏，每一栏占6间距，
 也可以使用响应式布局
 
-2.图标
+### 2.图标
 
 2.1使用包管理器
 
@@ -236,4 +236,96 @@ plugins: [
     <ElIconUser/>
   </el-icon>
 </template>
+```
+
+### 3.表单验证
+3.1自定义验证规则并绑定到标签中
+```js
+// login.vue
+// 响应式数据
+const ruleForm = reactive({
+    username: '',
+    password: ''
+})
+
+const rules = reactive<FormRules>({
+  // 用户名
+  username: [
+    {
+      // 必填
+      required: true,
+      message: '账号不能为空',
+      // 失去焦点时触发
+      trigger: 'blur'
+    },
+    {
+      min: 3,
+      max: 15,
+      message: '用户名长度必须在 3-15 之间',
+      trigger: 'blur'
+    }
+  ],
+  // 密码
+  password: [
+    {
+      // 必填
+      required: true,
+      message: '密码不能为空',
+      // 失去焦点时触发
+      trigger: 'blur'
+    },
+    {
+      min: 6,
+      max: 10,
+      message: '密码长度必须在 3-10 之间',
+      trigger: 'blur'
+    }
+  ]
+})
+```
+3.2 获取登录结果
+```js
+const submitForm = () => {
+  ruleFormRef.value.validate((isValid) => {
+    console.log(isValid)
+  })
+}
+```
+
+### 4.登录接口交互
+
+4.1引入axios请求库和登录接口
+创建路径src/axios.js
+创建axios实例
+```js
+//axios.js
+import axios from "axios";
+
+const service = axios.create({
+    baseURL: ' https://mock.presstime.cn/mock/63afb2b10a20cd00b24818ae/vvht'
+})
+
+export default service
+```
+
+4.2创建API接口
+创建src/api/manager.js文件(api文件夹负责管理接口方法)
+
+```js
+// manager.js
+import service from "@/axios.js";
+
+export function login(username, password) {
+    return service.post('/login', {
+        username,
+        password
+    })
+}
+```
+
+使用VueUse工具集-useCookies
+
+```shell
+yarn add @vueuse/integrations
+yarn add universal-cookie
 ```
