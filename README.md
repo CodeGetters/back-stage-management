@@ -158,6 +158,7 @@ css: {
 使用 element-plus 中的 layout 布局方式
 
 ### 1.布局
+
 通过基础的 24 分栏平均的分成了4栏，每一栏占6间距，
 也可以使用响应式布局
 
@@ -229,6 +230,7 @@ plugins: [
 
 2.3使用
 在图标名前 + ElIcon
+
 ```vue
 <!--自动导入-->
 <template #prefix>
@@ -239,7 +241,9 @@ plugins: [
 ```
 
 ### 3.表单验证
+
 3.1自定义验证规则并绑定到标签中
+
 ```js
 // login.vue
 // 响应式数据
@@ -248,47 +252,49 @@ const ruleForm = reactive({
     password: ''
 })
 
-const rules = reactive<FormRules>({
-  // 用户名
-  username: [
-    {
-      // 必填
-      required: true,
-      message: '账号不能为空',
-      // 失去焦点时触发
-      trigger: 'blur'
-    },
-    {
-      min: 3,
-      max: 15,
-      message: '用户名长度必须在 3-15 之间',
-      trigger: 'blur'
-    }
-  ],
-  // 密码
-  password: [
-    {
-      // 必填
-      required: true,
-      message: '密码不能为空',
-      // 失去焦点时触发
-      trigger: 'blur'
-    },
-    {
-      min: 6,
-      max: 10,
-      message: '密码长度必须在 3-10 之间',
-      trigger: 'blur'
-    }
-  ]
+const rules = reactive < FormRules > ({
+    // 用户名
+    username: [
+        {
+            // 必填
+            required: true,
+            message: '账号不能为空',
+            // 失去焦点时触发
+            trigger: 'blur'
+        },
+        {
+            min: 3,
+            max: 15,
+            message: '用户名长度必须在 3-15 之间',
+            trigger: 'blur'
+        }
+    ],
+    // 密码
+    password: [
+        {
+            // 必填
+            required: true,
+            message: '密码不能为空',
+            // 失去焦点时触发
+            trigger: 'blur'
+        },
+        {
+            min: 6,
+            max: 10,
+            message: '密码长度必须在 3-10 之间',
+            trigger: 'blur'
+        }
+    ]
 })
 ```
+
 3.2 获取登录结果
+
 ```js
 const submitForm = () => {
-  ruleFormRef.value.validate((isValid) => {
-    console.log(isValid)
-  })
+    ruleFormRef.value.validate((isValid) => {
+        console.log(isValid)
+    })
 }
 ```
 
@@ -297,6 +303,7 @@ const submitForm = () => {
 4.1引入axios请求库和登录接口
 创建路径src/axios.js
 创建axios实例
+
 ```js
 //axios.js
 import axios from "axios";
@@ -325,13 +332,16 @@ export function login(username, password) {
 
 4.3使用VueUse工具集-useCookies
 这两个主要用于设置、读取、删除Cookie信息
+
 ```shell
 yarn add @vueuse/integrations
 yarn add universal-cookie
 ```
 
 使用示例
+
 ```vue
+
 <template>
   <div>后台首页</div>
   <el-button @click="setCookie">设置</el-button>
@@ -340,14 +350,18 @@ yarn add universal-cookie
 </template>
 <script setup>
 import {useCookies} from '@vueuse/integrations/useCookies'
+
 const cookie = useCookies()
 console.log(cookie)
+
 function setCookie() {
   cookie.set('admin-token', "123456")
 }
+
 function getCookie() {
   console.log(cookie.get('admin-token'))
 }
+
 function deleteCookie() {
   cookie.remove('admin-token')
 }
@@ -356,5 +370,8 @@ function deleteCookie() {
 
 4.4存储token
 
-4.5用户信息持久化(vuex)
+4.5全局管理用户信息(vuex)
 
+4.6全局前置守卫(router)
+
+4.7持久化用户信息
