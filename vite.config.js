@@ -1,31 +1,60 @@
-// vite配置
+// vite
+import path from 'path'
 import {defineConfig} from 'vite'
 import vue from '@vitejs/plugin-vue'
-
-// Element-plus
 import AutoImport from 'unplugin-auto-import/vite'
 import Components from 'unplugin-vue-components/vite'
+
+// Element-plus
 import {ElementPlusResolver} from 'unplugin-vue-components/resolvers'
+
+// Element-plus图标
+import IconsResolver from 'unplugin-icons/resolver'
+import Icons from 'unplugin-icons/vite'
 
 // WindiCSS
 // import WindiCSS from 'vite-plugin-windicss'
-// vite配置
-import path from 'path'
+
+const pathSrc = path.resolve(__dirname, 'src')
 
 export default defineConfig({
     resolve: {
         alias: {
-            "@": path.resolve(__dirname, 'src')
+            "@": pathSrc
         }
     },
     plugins: [
         vue(),
         AutoImport({
-            resolvers: [ElementPlusResolver()],
+            // Auto import functions from Element Plus
+            // e.g. ElMessage, ElMessageBox... (with style)
+            // 自动导入 Element Plus 相关函数，如：ElMessage, ElMessageBox... (带样式)
+            resolvers: [
+                ElementPlusResolver(),
+                // Auto import icon components
+                // 自动导入图标组件
+                IconsResolver({
+                    prefix: 'Icon',
+                }),
+            ],
+            dts: path.resolve(pathSrc, 'auto-imports.d.ts')
         }),
         Components({
-            resolvers: [ElementPlusResolver()],
+            resolvers: [
+                // Auto register icon components
+                // 自动注册图标组件
+                IconsResolver({
+                    enabledCollections: ['ep'],
+                }),
+                // Auto register Element Plus components
+                // 自动导入 Element Plus 组件
+                ElementPlusResolver(),
+            ],
+            dts: path.resolve(pathSrc, 'components.d.ts'),
         }),
+        Icons({
+            autoInstall: true
+        })
     ],
     css: {
         // css预处理器

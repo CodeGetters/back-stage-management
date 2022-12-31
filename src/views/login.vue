@@ -1,5 +1,5 @@
 <template>
-  <el-row :gutter="20" class="container" style="margin:0" >
+  <el-row :gutter="20" class="container" style="margin:0">
 
     <el-col :lg="18" :md="12" class="left">
       <div class="welText">
@@ -22,7 +22,14 @@
           :rules="rules"
       >
         <el-form-item prop="uname">
-          <el-input v-model="ruleForm.uname" autocomplete="off" placeholder="请输入账号"/>
+          <el-input v-model="ruleForm.uname" autocomplete="off" placeholder="请输入账号">
+            <!--自动导入-->
+            <template #prefix>
+              <el-icon>
+                <ElIconUser/>
+              </el-icon>
+            </template>
+          </el-input>
         </el-form-item>
         <el-form-item prop="passwd">
           <el-input
@@ -30,7 +37,14 @@
               type="password"
               autocomplete="off"
               placeholder="请输入密码"
-          />
+          >
+            <!--自动导入-->
+            <template #prefix>
+              <el-icon>
+                <ElIconLock/>
+              </el-icon>
+            </template>
+          </el-input>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="submitForm(ruleFormRef)"
@@ -45,6 +59,7 @@
 </template>
 
 <script lang="ts" setup>
+
 import {reactive, ref} from 'vue'
 import type {FormInstance} from 'element-plus'
 
@@ -157,7 +172,7 @@ const submitForm = (formEl: FormInstance | undefined) => {
 
     .el-form {
 
-      .el-button{
+      .el-button {
         width: 250px;
         border-radius: 25px;
         background-color: #0ea5e9;

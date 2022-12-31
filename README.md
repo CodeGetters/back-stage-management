@@ -22,7 +22,9 @@ cd vue3-demo
 ```js
 import path from 'path'
 
-#这样就可以以@去引入src以下的路径
+#这样就可以以使用
+'@'
+去引入src以下的路径
 export default defineConfig({
     resolve: {
         alias: {
@@ -45,21 +47,21 @@ yarn add vue-router@next
 
 ```js
 // src/router/index.js
-import { createRouter, createWebHistory } from 'vue-router';
+import {createRouter, createWebHistory} from 'vue-router';
 
 // 懒加载
 const Hello = () => import('@/components/HelloWorld.vue');
 
 const routes = [
-	{
-		path: '/',
-		component: Hello,
-	},
+    {
+        path: '/',
+        component: Hello,
+    },
 ];
 
 const router = createRouter({
-	history: createWebHistory(),
-	routes,
+    history: createWebHistory(),
+    routes,
 });
 
 export default router;
@@ -90,10 +92,10 @@ yarn add -D unplugin-vue-components unplugin-auto-import
 ```shell
 import {defineConfig} from 'vite'
 import vue from '@vitejs/plugin-vue'
-
-// Element-plus
 import AutoImport from 'unplugin-auto-import/vite'
 import Components from 'unplugin-vue-components/vite'
+
+// Element-plus
 import {ElementPlusResolver} from 'unplugin-vue-components/resolvers'
 
 export default defineConfig({
@@ -124,6 +126,7 @@ import 'virtual:windi.css';
 ```
 
 7.引入 less
+
 ```shell
 yarn add less-loader less -D
 ```
@@ -132,6 +135,7 @@ yarn add less-loader less -D
 src/assets/style/global.less
 
 7.2 配置 vite.config.js
+
 ```js
 css: {
     // css预处理器
@@ -139,9 +143,97 @@ css: {
         less: {
             modifyVars: {
                 hack: `true; @import (reference) "${path.resolve("src/assets/style/global.less")}";`
-            },
+            }
+        ,
             javascriptEnabled: true
         }
+    ,
     }
+,
 }
+```
+
+## 登录页面login
+
+使用 element-plus 中的 layout 布局方式
+
+1.布局
+通过基础的 24 分栏平均的分成了4栏，每一栏占6间距，
+也可以使用响应式布局
+
+2.图标
+
+2.1使用包管理器
+
+```shell
+yarn add @element-plus/icons-vue
+```
+
+2.2自动导入
+
+引入依赖
+
+```shell
+#unplugin-icons
+yarn add -D unplugin-icons
+#unplugin-auto-import
+yarn add -D unplugin-auto-import
+```
+
+配置文件
+
+```js
+// vite.config.js
+// Element-plus图标
+import IconsResolver from 'unplugin-icons/resolver'
+import Icons from 'unplugin-icons/vite'
+
+const pathSrc = path.resolve(__dirname, 'src')
+
+plugins: [
+    vue(),
+    AutoImport({
+        // Auto import functions from Element Plus
+        // e.g. ElMessage, ElMessageBox... (with style)
+        // 自动导入 Element Plus 相关函数，如：ElMessage, ElMessageBox... (带样式)
+        resolvers: [
+            ElementPlusResolver(),
+            // Auto import icon components
+            // 自动导入图标组件
+            IconsResolver({
+                prefix: 'Icon',
+            }),
+        ],
+        // 生成文件路径
+        dts: path.resolve(pathSrc, 'auto-imports.d.ts')
+    }),
+    Components({
+        resolvers: [
+            // Auto register icon components
+            // 自动注册图标组件
+            IconsResolver({
+                enabledCollections: ['ep'],
+            }),
+            // Auto register Element Plus components
+            // 自动导入 Element Plus 组件
+            ElementPlusResolver(),
+        ],
+        // 生成文件路径
+        dts: path.resolve(pathSrc, 'components.d.ts'),
+    }),
+    Icons({
+        autoInstall: true
+    })
+]
+```
+
+2.3使用
+在图标名前 + ElIcon
+```vue
+<!--自动导入-->
+<template #prefix>
+  <el-icon>
+    <ElIconUser/>
+  </el-icon>
+</template>
 ```
