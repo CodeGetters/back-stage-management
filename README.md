@@ -43,27 +43,23 @@ yarn add vue-router@next
 
 4.1 路由配置
 
-新建文件 src/router/index.js
+新建文件 src/router/user.js
 
 ```js
-// src/router/index.js
+// src/router/user.js
 import {createRouter, createWebHistory} from 'vue-router';
-
 // 懒加载
 const Hello = () => import('@/components/HelloWorld.vue');
-
 const routes = [
     {
         path: '/',
         component: Hello,
     },
 ];
-
 const router = createRouter({
     history: createWebHistory(),
     routes,
 });
-
 export default router;
 ```
 
@@ -80,14 +76,18 @@ app.use(router);
 
 5.引入 Element-plus 组件库
 
+5.1使用包管理器
 ```shell
-#5.1使用包管理器
 yarn add element-plus
-#5.2自动导入
+```
+
+5.1.1自动导入(不推荐使用，页面更新就会出错)
+
+```shell
 yarn add -D unplugin-vue-components unplugin-auto-import
 ```
 
-5.3 配置 vite.config.js
+配置 vite.config.js(自动导入配置)
 
 ```shell
 import {defineConfig} from 'vite'
@@ -112,7 +112,39 @@ export default defineConfig({
 })`
 ```
 
-6.引入 WindCSS
+5.1.2完整引入(推荐使用)
+
+```js
+// main.js
+import App from './App.vue'
+import ElementPlus from 'element-plus'
+import 'element-plus/dist/index.css'
+
+const app = createApp(App)
+app.use(ElementPlus)
+app.mount('#app')
+```
+
+5.2图标的引入
+
+```shell
+# 使用包管理器
+yarn add @element-plus/icons-vue
+```
+
+注册所有图标
+
+```js
+// main.js
+import * as ElementPlusIconsVue from '@element-plus/icons-vue'
+
+const app = createApp(App)
+for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
+    app.component(key, component)
+}
+```
+
+6.引入 WindCSS(可使用可不使用)
 
 ```shell
 yarn add -D vite-plugin-windicss windicss
@@ -131,10 +163,22 @@ import 'virtual:windi.css';
 yarn add less-loader less -D
 ```
 
-7.1 创建路径
+创建全局样式文件
 src/assets/style/global.less
 
-7.2 配置 vite.config.js
+在全局使用
+```vue
+<!--app.vue-->
+<template>
+  <router-view/>
+</template>
+
+<style>
+@import "style/global.css";
+</style>
+```
+
+配置 vite.config.js
 
 ```js
 css: {
@@ -155,7 +199,10 @@ css: {
 
 ## 登录页面login
 
-使用 element-plus 中的 layout 布局方式
+* 布局
+* 图标
+* 表单校验规则
+* 登录接口
 
 ### 1.布局
 
@@ -304,12 +351,16 @@ const submitForm = () => {
 创建路径src/axios.js
 创建axios实例
 
+```shell
+yarn add axiox
+```
+
 ```js
 //axios.js
 import axios from "axios";
 
 const service = axios.create({
-    baseURL: ' https://mock.presstime.cn/mock/63afb2b10a20cd00b24818ae/vvht'
+    baseURL: 'https://mock.presstime.cn/mock/63afb2b10a20cd00b24818ae/vvht'
 })
 
 export default service

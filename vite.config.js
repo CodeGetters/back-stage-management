@@ -8,7 +8,7 @@ import Components from 'unplugin-vue-components/vite'
 // Element-plus
 import {ElementPlusResolver} from 'unplugin-vue-components/resolvers'
 
-// Element-plus图标
+// Element-plus图标(自动导入)
 import IconsResolver from 'unplugin-icons/resolver'
 import Icons from 'unplugin-icons/vite'
 

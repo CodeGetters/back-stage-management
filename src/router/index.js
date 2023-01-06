@@ -1,7 +1,7 @@
 import {createRouter, createWebHistory} from "vue-router";
 import {getToken} from "@/composables/auth.js";
 import {toast} from "@/composables/util.js";
-import store from "@/store/index.js";
+import store from "@/store/user.js";
 
 // 懒加载
 const Hello = () => import('@/components/HelloWorld.vue')

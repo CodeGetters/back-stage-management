@@ -1,5 +1,8 @@
 <template>
   <el-row :gutter="20" class="login-container" style="margin: 0">
+    <!--欢迎页面-->
+    <!--lg:18：响应式栅格数(>=1200px)，三一分-->
+    <!--md:12：响应式栅格或者(>=992px)，对半分-->
     <el-col :lg="18" :md="12" class="left">
       <div class="welText">
         <h1>欢迎光临</h1>
@@ -7,6 +10,7 @@
       </div>
     </el-col>
 
+    <!--右边-->
     <el-col :lg="6" :md="12" class="right">
       <h2>欢迎回来</h2>
       <div class="text-indent">
@@ -14,7 +18,9 @@
         <span>账号密码登录</span>
         <span class="text-inline"></span>
       </div>
+      <!--表单校验-->
       <el-form ref="ruleFormRef" :model="ruleForm" status-icon :rules="rules">
+        <!--用户名-->
         <el-form-item prop="username">
           <el-input v-model="ruleForm.username" placeholder="请输入用户名">
             <!--自动导入-->
@@ -25,6 +31,7 @@
             </template>
           </el-input>
         </el-form-item>
+        <!--密码-->
         <el-form-item prop="password">
           <el-input
               v-model="ruleForm.password"
@@ -33,7 +40,7 @@
               autocomplete="on"
               placeholder="请输入密码"
           >
-            <!--自动导入-->
+            <!--自动导入(图标)-->
             <template #prefix>
               <el-icon>
                 <ElIconLock/>
@@ -41,14 +48,6 @@
             </template>
           </el-input>
         </el-form-item>
-        <!--提示框-->
-        <el-alert
-            v-model="isShow"
-            v-show="isShow"
-            title="用户名或密码错误"
-            type="error"
-            show-icon
-        />
 
         <el-form-item>
           <el-button :loading="loading" type="primary" @click="submitForm"
@@ -71,11 +70,9 @@ import {toast} from '../composables/util.js';
 // vuex
 import {useStore} from "vuex";
 
-
 const store = useStore()
 const router = useRouter();
 const ruleFormRef = ref<FormInstance>(null);
-const isShow = ref(false);
 const loading = ref(false);
 
 const ruleForm = reactive({
@@ -85,7 +82,6 @@ const ruleForm = reactive({
 
 // 验证规则
 const rules = reactive<FormRules>({
-  // 用户名
   username: [
     {
       // 必填
@@ -101,7 +97,6 @@ const rules = reactive<FormRules>({
       trigger: 'blur',
     },
   ],
-  // 密码
   password: [
     {
       // 必填
@@ -119,12 +114,16 @@ const rules = reactive<FormRules>({
   ],
 });
 
+// 提交表单以及根据提交结果跳转页面
 const submitForm = () => {
+  // 验证规则返回结果
   ruleFormRef.value.validate((isValid) => {
     if (!isValid) {
       return false;
     }
+    // 加载动画
     loading.value = true;
+    // 状态全局持久化
     store.dispatch("login", ruleForm).then(res => {
       toast("登录成功")
       router.push('/home')
@@ -134,18 +133,18 @@ const submitForm = () => {
   });
 };
 
-// 监听回车事件
+// 回车即登录
 function onKeyUp(e) {
   if (e.key == 'Enter') submitForm()
 }
 
-// 添加键盘事件
+// 添加键盘事件(挂载前)
 onMounted(() => {
   document.addEventListener('keyup', onKeyUp)
 })
-// 移除键盘监听
+// 移除键盘监听(销毁前)
 onBeforeUnmount(() => {
-  document.addEventListener('keyup', onkeyup)
+  document.addEventListener('keyup', onKeyUp)
 })
 </script>
 
