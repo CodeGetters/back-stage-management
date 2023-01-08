@@ -1,0 +1,54 @@
+.container {
+  background-image: linear-gradient(to left top, #d16ba5, #c777b9, #ba83ca, #aa8fd8, #9a9ae1, #8aa7ec, #79b3f4, #69bff8, #52cffe, #41dfff, #46eefa, #5ffbf1);
+  min-height: 100vh;
+}
+.container .el-col {
+  margin: auto;
+}
+.container .leftCon {
+  width: 85%;
+  height: 85%;
+  margin-left: 50px;
+  box-shadow: 0 25px 45px rgba(0, 0, 0, 0.3);
+  border-radius: 5%;
+  overflow: hidden;
+}
+.container .leftCon video {
+  width: 100%;
+}
+.container .right {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
+}
+.container .right h2 {
+  font-size: 35px;
+  color: #7171ee;
+}
+.container .right .greetText {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 10px 0;
+}
+.container .right .greetText .line {
+  height: 1px;
+  width: 50px;
+  margin: 0 10px;
+  background-color: #666;
+}
+.container .right .greetText .text {
+  color: #666;
+  margin: 20px 0;
+}
+.container .right .el-form {
+  margin-left: 25%;
+}
+.container .right .el-form .el-input {
+  width: 57%;
+}
+.container .right .el-form .el-button {
+  width: 57%;
+}
+/*# sourceMappingURL=login.css.map */

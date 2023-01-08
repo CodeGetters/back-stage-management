@@ -1,0 +1,64 @@
+.container {
+  background-image: linear-gradient(to left top, #d16ba5, #c777b9, #ba83ca, #aa8fd8, #9a9ae1, #8aa7ec, #79b3f4, #69bff8, #52cffe, #41dfff, #46eefa, #5ffbf1);
+  min-height: 100vh;
+
+  .el-col {
+    margin: auto;
+  }
+
+  .leftCon {
+    width: 85%;
+    height: 85%;
+    margin-left: 50px;
+    box-shadow: 0 25px 45px rgba(0, 0, 0, .3);
+    border-radius: 5%;
+    overflow: hidden;
+
+    video {
+      width: 100%;
+    }
+  }
+
+  .right {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+
+    h2 {
+      font-size: 35px;
+      color: #7171ee;
+    }
+
+    .greetText {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 10px 0;
+
+      .line {
+        height: 1px;
+        width: 50px;
+        margin: 0 10px;
+        background-color: #666;
+      }
+
+      .text {
+        color: #666;
+        margin: 20px 0;
+      }
+    }
+
+    .el-form {
+      margin-left: 25%;
+
+      .el-input {
+        width: 57%;
+      }
+
+      .el-button {
+        width: 57%;
+      }
+    }
+  }
+}
